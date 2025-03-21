@@ -1,0 +1,41 @@
+/* Example CSS for Landing.css */
+.landing-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.animation-container {
+  width: 400px;
+  height: 400px;
+}
+
+.tagline-container {
+  max-width: 500px;
+}
+
+.tagline-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #6200ea;
+}
+
+.tagline-container p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.tagline-container button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tagline-container button:hover {
+  background-color: #0056b3;
+}
