@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import Sidebar from './Sidebar';
+import AttendanceManagement from './AttendanceManagement';
+import UserManagement from './UserManagement';
+import './Admin.css';
+import Timetable from "./Timetable";
 
 const AdminDashboard = () => {
   const [adminData, setAdminData] = useState(null);
+  const [activeSection, setActiveSection] = useState('analytics');
 
   useEffect(() => {
-    // Fetch admin data from localStorage
     const data = JSON.parse(localStorage.getItem('adminData'));
     if (data) {
       setAdminData(data);
@@ -16,17 +21,22 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div>
-      <h1>Welcome, {adminData.name}</h1>
-      <h2>Admin Dashboard</h2>
-      {/* Display admin data */}
-      <div>
-        <h3>Analytics</h3>
-        <pre>{JSON.stringify(adminData.analytics, null, 2)}</pre>
-      </div>
-      <div>
-        <h3>User Management</h3>
-        <pre>{JSON.stringify(adminData.users, null, 2)}</pre>
+    <div className="admin-container">
+      <Sidebar setActiveSection={setActiveSection} />
+      <div className="admin-content">
+        <h1>Welcome back, Admin! Here's what's happening today.👋</h1>
+        ⏰ Recent Activity:
+          <ul>
+<li> User "JohnDoe" signed up 2 hours ago</li>
+<li>Order #1234 was placed 1 hour ago</li>
+<li>Ticket #567 was resolved 30 minutes ago</li>
+</ul>
+
+
+   
+        {activeSection === 'attendance' && <AttendanceManagement />}
+        {activeSection === 'users' && <UserManagement users={adminData.users} />}
+        {activeSection === "timetable" && <Timetable />}
       </div>
     </div>
   );

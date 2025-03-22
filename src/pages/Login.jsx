@@ -39,29 +39,15 @@ const Login = ({ onLogin }) => {
       setMessage('Login successful!');
       onLogin(validUser); // Pass user data to the parent component
 
-      // Fetch admin data (if role is admin)
-      if (role === 'admin') {
-        // Example: Fetch admin data from an API or localStorage
-        const adminData = await fetchAdminData(validUser.email); // Replace with your logic
-        localStorage.setItem('adminData', JSON.stringify(adminData)); // Store admin data
-        navigate('/admin-dashboard'); // Redirect to admin dashboard
+      // Redirect admin to AdminDashboard
+      if (validUser.role === 'admin') {
+        navigate('/admin-dashboard'); // Admin redirected here
       } else {
-        navigate('/dashboard'); // Redirect to student dashboard
+        navigate('/dashboard'); // Student redirected to dashboard
       }
     } else {
       setMessage('Invalid email, password, or role!');
     }
-  };
-
-  // Example function to fetch admin data (replace with your logic)
-  const fetchAdminData = async (email) => {
-    // Simulate fetching admin data from an API or localStorage
-    return {
-      email,
-      name: 'Admin User',
-      analytics: { /* analytics data */ },
-      users: [ /* user management data */ ],
-    };
   };
 
   return (

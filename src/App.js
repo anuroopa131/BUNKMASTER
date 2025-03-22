@@ -9,6 +9,12 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import AboutUs from './pages/AboutUs'; // Import the AboutUs component
 import Contact from './pages/Contact'; // Import the Contact component
+import AdminDashboard from './pages/admin/AdminDashboard';
+import Analytics from './pages/admin/Analytics';
+import Sidebar from './pages/admin/Sidebar';
+import UserManagement from './pages/admin/UserManagement';
+import AttendanceManagement from './pages/admin/AttendanceManagement';
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
@@ -95,6 +101,24 @@ function App() {
           <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/about-us" element={<AboutUs />} /> {/* Add AboutUs route */}
           <Route path="/contact" element={<Contact />} /> {/* Add Contact route */}
+          <Route path="/" element={<Landing />} />
+  <Route path="/login" element={<Login onLogin={handleLogin} />} />
+  <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
+  <Route path="/dashboard" element={<Dashboard />} />
+  <Route path="/profile" element={<Profile user={user} />} />
+  <Route path="/about-us" element={<AboutUs />} />
+  <Route path="/contact" element={<Contact />} />
+
+  {/* Admin Routes */}
+  {user?.role === 'admin' && (
+    <>
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/analytics" element={<Analytics />} />
+      <Route path="/admin/attendance" element={<AttendanceManagement />} />
+      <Route path="/admin/sidebar" element={<Sidebar />} />
+      <Route path="/admin/user-management" element={<UserManagement />} />
+    </>
+  )}
         </Routes>
       </Router>
     </ThemeProvider>

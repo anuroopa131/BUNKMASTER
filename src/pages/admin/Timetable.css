@@ -1,0 +1,33 @@
+.timetable-container {
+    margin-left: 270px;
+    padding: 20px;
+  }
+  
+  .day-section {
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  th {
+    background: #ffa500;
+    color: white;
+  }
+  
+  td {
+    background: #f8f8f8;
+  }
+  
+  h3 {
+    margin-top: 10px;
+  }
+  
