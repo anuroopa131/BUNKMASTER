@@ -56,12 +56,12 @@ app.get('/api/test', (req, res) => {
 async function startServer() {
   try {
     await db.query('SELECT 1');
-    console.log('✅ Connected to MySQL');
+    console.log('Connected to MySQL');
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error('❌ Database connection failed:', err.message);
+    console.error('Database connection failed:', err.message);
   }
 }
 
