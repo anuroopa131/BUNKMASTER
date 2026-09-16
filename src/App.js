@@ -1,124 +1,160 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+
+// Import local components and pages
 import Header from './components/Header';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import AboutUs from './pages/AboutUs'; // Import the AboutUs component
-import Contact from './pages/Contact'; // Import the Contact component
-import AdminDashboard from './pages/admin/AdminDashboard';
-import Analytics from './pages/admin/Analytics';
-import Sidebar from './pages/admin/Sidebar';
-import UserManagement from './pages/admin/UserManagement';
-import AttendanceManagement from './pages/admin/AttendanceManagement';
+import AboutUs from './pages/AboutUs';
+import Contact from './pages/Contact';
 
+
+// Import our new MySQL-based auth service
+import { listenToAuthChanges, clearUserSession, saveUserSession } from './services/authService';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
-  const [user, setUser] = useState(null); // Store user details
-  const [darkMode, setDarkMode] = useState(false); // Track dark mode
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
 
-  // Load theme preference from localStorage
+  // Check for MySQL User Session on Mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('darkMode');
-    if (savedTheme === 'true') {
-      setDarkMode(true);
-    }
+    // listenToAuthChanges now checks localStorage instead of Firebase
+    const unsubscribe = listenToAuthChanges((dbUser) => {
+      if (dbUser) {
+        setUser(dbUser);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Save theme preference to localStorage
   useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
-  }, [darkMode]);
+    const handleUnauthorized = () => setUser(null);
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, []);
 
-  // Function to handle login
-  const handleLogin = (userData) => {
-    setIsLoggedIn(true); // Set login status to true
-    setUser(userData); // Store user details
+  // Handle login (Called from Login.jsx)
+  const handleLogin = (session) => {
+    saveUserSession(session);
+    setUser(session.user);
   };
 
-  // Function to handle logout
+  // Handle logout (Called from Header.jsx)
   const handleLogout = () => {
-    setIsLoggedIn(false); // Set login status to false
-    setUser(null); // Clear user details
+    clearUserSession(); // Clears localStorage
+    setUser(null);
   };
 
-  // Define light and dark themes
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem('darkMode', newMode.toString());
+  };
+
+  // Define themes
   const lightTheme = createTheme({
     palette: {
       mode: 'light',
-      primary: {
-        main: '#6200ea', // Purple
-      },
-      background: {
-        default: '#f4f4f4', // Light gray
-        paper: '#ffffff', // White
-      },
-      text: {
-        primary: '#000000', // Black
-        secondary: '#333333', // Dark gray
-      },
+      primary: { main: '#6200ea' },
+      secondary: { main: '#03dac6' },
+      background: { 
+        default: '#f5f5f5',
+        paper: '#ffffff'
+      }
     },
+    shape: { borderRadius: 12 }
   });
 
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
-      primary: {
-        main: '#bb86fc', // Light purple
-      },
-      background: {
-        default: '#121212', // Dark gray
-        paper: '#1e1e1e', // Darker gray
-      },
-      text: {
-        primary: '#ffffff', // White
-        secondary: '#e0e0e0', // Light gray
-      },
+      primary: { main: '#bb86fc' },
+      secondary: { main: '#03dac6' },
+      background: { 
+        default: '#121212',
+        paper: '#1e1e1e'
+      }
     },
+    shape: { borderRadius: 12 }
   });
+
+  // Show loading spinner while checking session
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        background: darkMode ? '#121212' : '#f5f5f5'
+      }}>
+        <div className="spinner"></div>
+        <style>{`
+          .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid ${darkMode ? '#333' : '#e0e0e0'};
+            border-top: 5px solid ${darkMode ? '#bb86fc' : '#6200ea'};
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <CssBaseline /> {/* Apply baseline styles for the theme */}
+      <CssBaseline />
       <Router>
-        {/* Pass isLoggedIn, user, onLogout, darkMode, and setDarkMode to Header */}
         <Header
-          isLoggedIn={isLoggedIn}
           user={user}
           onLogout={handleLogout}
           darkMode={darkMode}
-          setDarkMode={setDarkMode}
+          toggleDarkMode={toggleDarkMode}
         />
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile user={user} />} />
-          <Route path="/about-us" element={<AboutUs />} /> {/* Add AboutUs route */}
-          <Route path="/contact" element={<Contact />} /> {/* Add Contact route */}
-          <Route path="/" element={<Landing />} />
-  <Route path="/login" element={<Login onLogin={handleLogin} />} />
-  <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
-  <Route path="/dashboard" element={<Dashboard />} />
-  <Route path="/profile" element={<Profile user={user} />} />
-  <Route path="/about-us" element={<AboutUs />} />
-  <Route path="/contact" element={<Contact />} />
-
-  {/* Admin Routes */}
-  {user?.role === 'admin' && (
-    <>
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/analytics" element={<Analytics />} />
-      <Route path="/admin/attendance" element={<AttendanceManagement />} />
-      <Route path="/admin/sidebar" element={<Sidebar />} />
-      <Route path="/admin/user-management" element={<UserManagement />} />
-    </>
-  )}
+          {/* Landing/Auth Logic */}
+          <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
+          <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+          <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup onLogin={handleLogin} />} />
+          
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/home" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+          <Route path="/subjects" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/subject" element={user ? <Navigate to="/subjects" /> : <Navigate to="/login" />} />
+          <Route path="/timetable" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/today" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/bunk-calculator" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/calculator" element={user ? <Navigate to="/bunk-calculator" /> : <Navigate to="/login" />} />
+          <Route path="/analytics" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/calendar" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/danger-zone" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+          <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
+          
+          {/* Static Routes */}
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
+          
+          {/* Redirect all unknown paths */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </ThemeProvider>

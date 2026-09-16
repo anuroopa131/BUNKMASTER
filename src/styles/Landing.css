@@ -1,41 +1,212 @@
-/* Example CSS for Landing.css */
+/* ---------------------------------------------------------------------
+   BunkMaster — Landing page
+   Same token system as the header and auth pages: navy + gold.
+   Add the Google Fonts <link> to public/index.html if you haven't
+   already (see theme.js comment block).
+   --------------------------------------------------------------------- */
+
+:root {
+  --bg: #EEF2F8;
+  --surface: #FFFFFF;
+  --ink: #16213E;
+  --ink-soft: #3A4468;
+  --border: #D8DEE9;
+  --primary: #16213E;
+  --primary-deep: #0F1730;
+  --primary-light: #3A4468;
+  --gold: #F5B301;
+  --gold-dark: #D69700;
+  --gradient: linear-gradient(160deg, #16213E 0%, #223060 100%);
+}
+
 .landing-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--ink);
+}
+
+/* Ambient decorative gradient blobs — quiet, not the signature element,
+   just enough depth to keep the flat background from feeling bare */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-blob-1 {
+  width: 480px;
+  height: 480px;
+  background: var(--gold);
+  opacity: 0.18;
+  top: -160px;
+  right: -120px;
+  animation: drift1 14s ease-in-out infinite;
+}
+.bg-blob-2 {
+  width: 380px;
+  height: 380px;
+  background: var(--primary);
+  opacity: 0.1;
+  bottom: -140px;
+  left: -100px;
+  animation: drift2 16s ease-in-out infinite;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: center;
+  gap: 64px;
+  flex-wrap: wrap;
+  padding: 40px 48px;
 }
 
 .animation-container {
-  width: 400px;
-  height: 400px;
+  position: relative;
+  width: 460px;
+  height: 460px;
+  flex-shrink: 0;
+  animation: floatIn 900ms cubic-bezier(0.16, 1, 0.3, 1) both, bob 6s ease-in-out 900ms infinite;
 }
 
 .tagline-container {
-  max-width: 500px;
+  max-width: 480px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--ink);
+  padding: 6px 14px;
+  border-radius: 99px;
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: fadeUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
 }
 
 .tagline-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #6200ea;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: var(--ink);
+  opacity: 0;
+  animation: fadeUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 220ms forwards;
+}
+
+/* Gold "highlighter" swipe behind the key phrase, rather than a
+   gradient text fill — keeps the headline readable and ties back to
+   the marked-up attendance-register motif used across the app. */
+.gradient-text {
+  background: linear-gradient(180deg, transparent 60%, rgba(245, 179, 1, 0.55) 60%);
+  padding: 0 2px;
 }
 
 .tagline-container p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+  opacity: 0;
+  animation: fadeUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 360ms forwards;
 }
 
 .tagline-container button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #6200ea;
-  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--gold);
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
+  padding: 14px 32px;
   cursor: pointer;
+  box-shadow: 0 8px 24px rgba(214, 151, 0, 0.32);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease, background-color 200ms ease;
+  opacity: 0;
+  animation: fadeUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 500ms forwards;
 }
 
 .tagline-container button:hover {
-  background-color: #0056b3;
+  background: var(--gold-dark);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(214, 151, 0, 0.42);
+}
+
+.tagline-container button:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Keyboard focus visibility */
+.tagline-container button:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 3px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-30px, 30px); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -20px); }
+}
+
+@media (max-width: 860px) {
+  .landing-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+  .tagline-container h1 { font-size: 32px; }
+  .animation-container { width: 340px; height: 340px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob,
+  .animation-container,
+  .eyebrow,
+  .tagline-container h1,
+  .tagline-container p,
+  .tagline-container button {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .tagline-container button:hover {
+    transform: none !important;
+  }
 }
