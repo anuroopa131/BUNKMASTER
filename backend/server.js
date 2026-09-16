@@ -30,8 +30,10 @@ const db = mysql.createPool({
 global.db = db;
 
 // Middleware
+
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+  origin: process.env.CLIENT_ORIGIN || 'https://bunkmaster-peach.vercel.app',
+  credentials: true
 }));
 app.use(express.json());
 
