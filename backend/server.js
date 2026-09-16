@@ -30,9 +30,8 @@ const db = mysql.createPool({
 global.db = db;
 
 // Middleware
-
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'https://bunkmaster-peach.vercel.app',
+  origin: 'https://bunkmaster-peach.vercel.app', // Must be a string, not inside an array like ['https://...']
   credentials: true
 }));
 app.use(express.json());
