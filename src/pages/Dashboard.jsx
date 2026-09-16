@@ -106,7 +106,7 @@ const Dashboard = ({ user }) => {
     if (!user?.id) return;
     setLoading(prev => ({ ...prev, analytics: true }));
     try {
-      const response = await authorizedFetch(`http://localhost:5000/api/analytics/${user.id}`);
+      const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/analytics/${user.id}`);
       if (!response.ok) throw new Error('Failed to fetch analytics');
       const data = await response.json();
       setAnalytics(data);
@@ -124,8 +124,8 @@ const Dashboard = ({ user }) => {
     if (!user?.id) return;
     try {
       const [subjectsRes, timetableRes] = await Promise.all([
-        authorizedFetch(`http://localhost:5000/api/subjects/${user.id}`),
-        authorizedFetch(`http://localhost:5000/api/timetable/${user.id}`),
+        authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/subjects/${user.id}`),
+        authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/timetable/${user.id}`),
       ]);
       if (subjectsRes.ok) setSubjects(await subjectsRes.json());
       if (timetableRes.ok) setTimetable(await timetableRes.json());
@@ -141,8 +141,8 @@ const Dashboard = ({ user }) => {
     if (!user?.id) return;
     try {
       const [latestResponse, historyResponse] = await Promise.all([
-        authorizedFetch(`http://localhost:5000/api/semester/latest/${user.id}`),
-        authorizedFetch(`http://localhost:5000/api/semester/history/${user.id}`),
+        authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/semester/latest/${user.id}`),
+        authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/semester/history/${user.id}`),
       ]);
 
       if (latestResponse.ok) {
@@ -158,7 +158,7 @@ const Dashboard = ({ user }) => {
 
   const handleEndSemester = async (endDate) => {
     if (!user?.id) return;
-    const response = await authorizedFetch('http://localhost:5000/api/semester/end', {
+    const response = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/semester/end', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ endDate }),
@@ -187,7 +187,7 @@ const Dashboard = ({ user }) => {
       if (!user?.id) return;
       setLoading(prev => ({ ...prev, subjects: true }));
       try {
-        const response = await authorizedFetch(`http://localhost:5000/api/subjects/${user.id}`);
+        const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/subjects/${user.id}`);
         if (!response.ok) throw new Error('Failed to fetch subjects');
         const data = await response.json();
         setSubjects(data);
@@ -205,7 +205,7 @@ const Dashboard = ({ user }) => {
       if (!user?.id) return;
       setLoading(prev => ({ ...prev, timetable: true }));
       try {
-        const response = await authorizedFetch(`http://localhost:5000/api/timetable/${user.id}`);
+        const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/timetable/${user.id}`);
         if (!response.ok) throw new Error('Failed to fetch timetable');
         const data = await response.json();
         setTimetable(data);
@@ -222,7 +222,7 @@ const Dashboard = ({ user }) => {
     const fetchTodayClasses = async () => {
       if (!user?.id) return;
       try {
-        const response = await authorizedFetch(`http://localhost:5000/api/attendance/today/${user.id}`);
+        const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/attendance/today/${user.id}`);
         if (!response.ok) throw new Error("Failed to fetch today's classes");
         const data = await response.json();
         setTodayClasses(data);
@@ -240,7 +240,7 @@ const Dashboard = ({ user }) => {
   const addSubject = async () => {
     if (!user?.id || !newSubject.trim()) return;
     try {
-      const response = await authorizedFetch('http://localhost:5000/api/subjects', {
+      const response = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/subjects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subject_name: newSubject.trim() }),
@@ -257,7 +257,7 @@ const Dashboard = ({ user }) => {
   const deleteSubject = async (subjectId) => {
     if (!window.confirm('Delete this subject? All related data will be removed.')) return;
     try {
-      const response = await authorizedFetch(`http://localhost:5000/api/subjects/${subjectId}`, { method: 'DELETE' });
+      const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/subjects/${subjectId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete subject');
       setSubjects(prev => prev.filter(s => s.id !== subjectId));
     } catch (err) {
@@ -268,7 +268,7 @@ const Dashboard = ({ user }) => {
   const fetchDayClasses = async (date) => {
     if (!user?.id) return;
     try {
-      const response = await authorizedFetch(`http://localhost:5000/api/attendance/date/${user.id}/${date}`);
+      const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/attendance/date/${user.id}/${date}`);
       const data = await response.json();
       setCalendarClasses(data);
     } catch (err) {
@@ -279,7 +279,7 @@ const Dashboard = ({ user }) => {
   const fetchMonthSummary = async (year, month) => {
     if (!user?.id) return;
     try {
-      const response = await authorizedFetch(`http://localhost:5000/api/attendance/month/${user.id}/${year}/${month}`);
+      const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/attendance/month/${user.id}/${year}/${month}`);
       const data = await response.json();
       const summaryMap = {};
       data.forEach(row => { summaryMap[row.date] = row; });
@@ -295,7 +295,7 @@ const Dashboard = ({ user }) => {
   const addTimetableEntry = async () => {
     if (!user?.id || !newTimetableEntry.subject_id || !newTimetableEntry.start_time) return;
     try {
-      const response = await authorizedFetch('http://localhost:5000/api/timetable', {
+      const response = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/timetable', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTimetableEntry),
@@ -310,7 +310,7 @@ const Dashboard = ({ user }) => {
       console.log('[Auto-Backfill Debug] effectiveStartDate:', effectiveStartDate, 'userId:', user?.id, 'newEntry:', newEntry);
       if (effectiveStartDate) {
         try {
-          const bfRes = await authorizedFetch('http://localhost:5000/api/attendance/backfill', {
+          const bfRes = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/attendance/backfill', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ startDate: effectiveStartDate }),
@@ -337,7 +337,7 @@ const Dashboard = ({ user }) => {
   const deleteTimetableEntry = async (entryId) => {
     if (!window.confirm('Delete this timetable entry?')) return;
     try {
-      const response = await authorizedFetch(`http://localhost:5000/api/timetable/${entryId}`, { method: 'DELETE' });
+      const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/timetable/${entryId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete entry');
       setTimetable(prev => prev.filter(e => e.id !== entryId));
     } catch (err) {
@@ -347,7 +347,7 @@ const Dashboard = ({ user }) => {
 
   const markAttendance = async (timetableId, status, date = selectedDate) => {
     try {
-      const response = await authorizedFetch('http://localhost:5000/api/attendance', {
+      const response = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ timetable_id: timetableId, date, status }),
@@ -373,7 +373,7 @@ const Dashboard = ({ user }) => {
      const updateThreshold = async (newValue) => {
        if (!user?.id) return;
        try {
-         const response = await authorizedFetch(`http://localhost:5000/api/users/${user.id}/threshold`, {
+         const response = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/users/${user.id}/threshold`, {
            method: 'PUT',
            headers: { 'Content-Type': 'application/json' },
            body: JSON.stringify({ target_percentage: newValue }),
@@ -403,7 +403,7 @@ const Dashboard = ({ user }) => {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const res = await authorizedFetch('http://localhost:5000/api/attendance/backfill', {
+      const res = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/attendance/backfill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ startDate }),
@@ -429,7 +429,7 @@ const Dashboard = ({ user }) => {
   const saveSemesterSettings = async () => {
     if (!user?.id) return;
     try {
-      await authorizedFetch(`http://localhost:5000/api/users/${user.id}/semester`, {
+      await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/users/${user.id}/semester`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -452,7 +452,7 @@ const Dashboard = ({ user }) => {
 
   const markWholeDay = async (status) => {
     try {
-      await authorizedFetch('http://localhost:5000/api/attendance/day-bulk', {
+      await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/attendance/day-bulk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ date: selectedDate, status }),

@@ -42,7 +42,7 @@ const PasswordConfirmDialog = ({
     setLoading(true);
     setError('');
     try {
-      const res = await authorizedFetch('http://localhost:5000/api/auth/verify-password', {
+      const res = await authorizedFetch('https://bunkmaster-gs92.onrender.com/api/auth/verify-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),

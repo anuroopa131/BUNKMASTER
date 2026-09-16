@@ -33,7 +33,7 @@ const Profile = ({ user }) => {
       }
       setLoading(true);
       try {
-        const res = await authorizedFetch(`http://localhost:5000/api/analytics/${user.id}`);
+        const res = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/analytics/${user.id}`);
         if (!res.ok) throw new Error('Failed to load your attendance data');
         const data = await res.json();
         setAnalytics(data);

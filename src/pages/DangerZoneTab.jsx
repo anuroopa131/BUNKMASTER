@@ -39,7 +39,7 @@ const DangerZoneTab = ({ user, academicStartDate, onDataChanged }) => {
     const fetchHistory = async () => {
       if (!user?.id) return;
       try {
-        const res = await authorizedFetch(`http://localhost:5000/api/semester/history/${user.id}`);
+        const res = await authorizedFetch(`https://bunkmaster-gs92.onrender.com/api/semester/history/${user.id}`);
         if (res.ok) setHistory(await res.json());
       } catch (err) {
         // Non-critical — just don't show past semesters if this fails.
@@ -62,7 +62,7 @@ const DangerZoneTab = ({ user, academicStartDate, onDataChanged }) => {
     title: 'Delete all subjects?',
     description: 'This deletes every subject you\'ve added, your entire timetable, and every attendance log tied to them.',
     confirmLabel: 'Delete all subjects',
-    onConfirmed: () => runAndRefresh(`http://localhost:5000/api/subjects/all/${user.id}`, { method: 'DELETE' }),
+    onConfirmed: () => runAndRefresh(`https://bunkmaster-gs92.onrender.com/api/subjects/all/${user.id}`, { method: 'DELETE' }),
   });
 
   // --- Delete all timetable (cascades: timetable -> attendance; subjects stay) ---
@@ -70,7 +70,7 @@ const DangerZoneTab = ({ user, academicStartDate, onDataChanged }) => {
     title: 'Delete your timetable?',
     description: 'This deletes every timetable entry and every attendance log tied to it. Your subjects list stays intact.',
     confirmLabel: 'Delete timetable',
-    onConfirmed: () => runAndRefresh(`http://localhost:5000/api/timetable/all/${user.id}`, { method: 'DELETE' }),
+    onConfirmed: () => runAndRefresh(`https://bunkmaster-gs92.onrender.com/api/timetable/all/${user.id}`, { method: 'DELETE' }),
   });
 
   // --- Delete attendance logs: wipe everything, or from a chosen date onward ---
@@ -82,14 +82,14 @@ const DangerZoneTab = ({ user, academicStartDate, onDataChanged }) => {
         title: 'Wipe all attendance logs?',
         description: 'This deletes every attendance record you have and resets your semester start date. Subjects and timetable stay intact.',
         confirmLabel: 'Wipe attendance',
-        onConfirmed: () => runAndRefresh(`http://localhost:5000/api/attendance/all/${user.id}`, { method: 'DELETE' }),
+        onConfirmed: () => runAndRefresh(`https://bunkmaster-gs92.onrender.com/api/attendance/all/${user.id}`, { method: 'DELETE' }),
       });
     } else {
       setPendingAction({
         title: `Delete attendance from ${attendanceFromDate} onward?`,
         description: `This deletes every attendance record dated ${attendanceFromDate} or later. Anything before that date is untouched.`,
         confirmLabel: 'Delete these logs',
-        onConfirmed: () => runAndRefresh(`http://localhost:5000/api/attendance/from/${user.id}/${attendanceFromDate}`, { method: 'DELETE' }),
+        onConfirmed: () => runAndRefresh(`https://bunkmaster-gs92.onrender.com/api/attendance/from/${user.id}/${attendanceFromDate}`, { method: 'DELETE' }),
       });
     }
   };
@@ -103,7 +103,7 @@ const DangerZoneTab = ({ user, academicStartDate, onDataChanged }) => {
     setEndSemesterError('');
     setEndingSemester(true);
     try {
-      const res = await authorizedFetch('http://localhost:5000/api/semester/end', {
+      const res = await authorizedFetch('[https://bunkmaster-gs92.onrender.com](https://bunkmaster-gs92.onrender.com)/api/semester/end', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ endDate: endSemesterDate }),
