@@ -50,6 +50,8 @@ const Login = ({ onLogin }) => {
         body: JSON.stringify({ email: userEmail, password: pass }),
       });
 
+
+      
       const data = await response.json();
 
       if (response.ok) {
